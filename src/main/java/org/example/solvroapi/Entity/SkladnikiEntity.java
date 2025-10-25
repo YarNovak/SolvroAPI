@@ -34,9 +34,12 @@ public class SkladnikiEntity {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private double quantity;
+
     @ManyToMany(mappedBy = "ingredients")
     @JsonIgnore
-    private List<CocktailEntity> cocktails = new ArrayList<>();
+    private List<KoktailEntity> cocktails = new ArrayList<>();
 
 
 }

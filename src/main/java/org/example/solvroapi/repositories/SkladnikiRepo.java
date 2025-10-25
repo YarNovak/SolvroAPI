@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface SkladnikiRepo extends JpaRepository<SkladnikiEntity, Long> {
     List<SkladnikiEntity> findAllById(Long id);
     Optional<SkladnikiEntity> findById(Long id);
+
 }
