@@ -1,40 +1,31 @@
 package org.example.solvroapi.Entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
 
 @Entity
-@Table(name = "koktails")
-@Getter @Setter
+@Data
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Table(name = "cocktails")
 public class KoktailEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
     private String name;
-
     private String category;
-
+    private String instruction;
 
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-
-    @Column(columnDefinition = "text")
-    private String instructions;
-
-    @ManyToMany
-    @JoinTable(
-            name = "cocktail_ingredients",
-            joinColumns = @JoinColumn(name = "cocktail_id"),
-            inverseJoinColumns = @JoinColumn(name = "ingredient_id")
-    )
-    private List<SkladnikiEntity> ingredients = new ArrayList<>();
+    @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<KoktailSkladnikEntity> ingredients = new ArrayList<>();
 }

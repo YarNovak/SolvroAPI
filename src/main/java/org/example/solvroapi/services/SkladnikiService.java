@@ -2,6 +2,7 @@ package org.example.solvroapi.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.solvroapi.Entity.SkladnikiEntity;
+import org.example.solvroapi.repositories.KoktailSkladnikRepo;
 import org.example.solvroapi.repositories.SkladnikiRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -17,6 +18,8 @@ import java.util.stream.Collectors;
 public class SkladnikiService {
     @Autowired
     private SkladnikiRepo repo;
+    @Autowired
+    private KoktailSkladnikRepo koktails_skladniki;
 
     public SkladnikiEntity getSkladnik(Long id) {
         return repo.findById(id).orElse(null);
@@ -41,9 +44,7 @@ public class SkladnikiService {
             skladnik.setDescription(s.getDescription());
             skladnik.setAlcoholic(s.isAlcoholic());
             skladnik.setPhotoUrl(s.getPhotoUrl());
-            skladnik.setQuantity(s.getQuantity());
 
-            //  skladnik = s;
             skladnik.setUpdatedAt(LocalDateTime.now());
 
             return repo.save(skladnik);
@@ -53,7 +54,9 @@ public class SkladnikiService {
         return null;
     }
     public void deleteSkladnik(Long s) {
+
         repo.deleteById(s);
+
     }
 
     public Page<SkladnikiEntity> getFilteredSkladniki(
@@ -72,8 +75,6 @@ public class SkladnikiService {
         List<SkladnikiEntity> filtered = all.stream()
                 .filter(s -> name.map(n -> s.getName().toLowerCase().contains(n.toLowerCase())).orElse(true))
                 .filter(s -> alcoholic.map(a -> s.isAlcoholic() == a).orElse(true))
-                .filter(s -> minQuantity.map(min -> s.getQuantity() >= min).orElse(true))
-                .filter(s -> maxQuantity.map(max -> s.getQuantity() <= max).orElse(true))
                 .collect(Collectors.toList());
 
 

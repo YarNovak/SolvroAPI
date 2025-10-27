@@ -1,6 +1,7 @@
 package org.example.solvroapi.controllers;
 
 import lombok.RequiredArgsConstructor;
+import org.example.solvroapi.DTO.CreateCocktailRequest;
 import org.example.solvroapi.Entity.KoktailEntity;
 import org.example.solvroapi.services.KoktailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,13 +51,13 @@ public class KoktalisController {
 
 
     @PostMapping
-    public ResponseEntity<KoktailEntity> postKoktails(@RequestBody KoktailEntity koktail) {
+    public ResponseEntity<KoktailEntity> postKoktails(@RequestBody CreateCocktailRequest koktail) {
         KoktailEntity response = service.create(koktail);
         return ResponseEntity.ok(response);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<KoktailEntity> putKoktails(@PathVariable Long id, @RequestBody KoktailEntity koktail) {
+    public ResponseEntity<KoktailEntity> putKoktails(@PathVariable Long id, @RequestBody CreateCocktailRequest koktail) {
         KoktailEntity response = service.update(id, koktail);
         return ResponseEntity.ok(response);
     }

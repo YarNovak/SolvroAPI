@@ -80,6 +80,7 @@ public class SkladnikiController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteSkladniki(@PathVariable Long id) {
+
         service.deleteSkladnik(id);
         return ResponseEntity.ok("ok");
     }

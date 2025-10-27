@@ -1,13 +1,20 @@
 package org.example.solvroapi.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.solvroapi.DTO.CreateCocktailRequest;
 import org.example.solvroapi.Entity.KoktailEntity;
+import org.example.solvroapi.Entity.KoktailSkladnikEntity;
+import org.example.solvroapi.Entity.SkladnikiEntity;
 import org.example.solvroapi.repositories.KocktailsRepo;
+import org.example.solvroapi.repositories.KoktailSkladnikRepo;
+import org.example.solvroapi.repositories.SkladnikiRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -19,10 +26,34 @@ public class KoktailService {
 
     @Autowired
     private final KocktailsRepo kocktailsRepo;
+    @Autowired
+    private final SkladnikiRepo skladnikiRepo;
 
-    public KoktailEntity create(KoktailEntity c) {
-        c.setCreatedAt(LocalDateTime.now());
-        return kocktailsRepo.save(c);
+    @Autowired
+    private KoktailSkladnikRepo koktailSkladnikRepo;
+
+    @Transactional
+    public KoktailEntity create(CreateCocktailRequest dto) {
+        KoktailEntity cocktail = new KoktailEntity();
+        cocktail.setName(dto.getName());
+        cocktail.setCategory(dto.getCategory());
+        cocktail.setInstruction(dto.getInstruction());
+
+        List<KoktailSkladnikEntity> ingredients = dto.getIngredients().stream().map(item -> {
+            SkladnikiEntity ingredient = skladnikiRepo.findById(item.getIngredientId())
+                    .orElseThrow(() -> new RuntimeException("Ingredient not found: " + item.getIngredientId()));
+
+            KoktailSkladnikEntity ci = new KoktailSkladnikEntity();
+            ci.setCocktail(cocktail);
+            ci.setIngredient(ingredient);
+            ci.setAmount(item.getAmount());
+            ci.setUnit(item.getUnit());
+
+            return ci;
+        }).toList();
+
+        cocktail.setIngredients(ingredients);
+        return kocktailsRepo.save(cocktail);
     }
 
     public List<KoktailEntity> getAllFiltered(String name, String category, Boolean alcoholic) {
@@ -70,7 +101,7 @@ public class KoktailService {
                 ).orElse(true))
                 .filter(c -> ingredientName.map(iName ->
                         c.getIngredients().stream()
-                                .anyMatch(ing -> ing.getName().toLowerCase().contains(iName.toLowerCase()))
+                                .anyMatch(ing -> ing.getIngredient().getName().toLowerCase().contains(iName.toLowerCase()))
                 ).orElse(true))
                 .collect(Collectors.toList());
 
@@ -83,24 +114,43 @@ public class KoktailService {
 
 
 
-    public KoktailEntity update(Long id, KoktailEntity c) {
+    @Transactional
+    public KoktailEntity update(Long id, CreateCocktailRequest dto) {
+        KoktailEntity cocktail = kocktailsRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cocktail not found"));
 
-        KoktailEntity cocktail = kocktailsRepo.findById(id).orElse(null);
-        if(cocktail != null) {
 
-            cocktail.setName(c.getName());
-            cocktail.setCategory(c.getCategory());
-            cocktail.setIngredients(c.getIngredients());
-            cocktail.setInstructions(c.getInstructions());
-            cocktail.setUpdatedAt(LocalDateTime.now());
+        cocktail.setName(dto.getName());
+        cocktail.setCategory(dto.getCategory());
+        cocktail.setInstruction(dto.getInstruction());
 
-            //cocktail = c;
-            cocktail.setUpdatedAt(LocalDateTime.now());
 
-            return kocktailsRepo.save(cocktail);
-        }
-       return null;
+        cocktail.getIngredients().clear();
+        kocktailsRepo.saveAndFlush(cocktail);
+
+
+        List<KoktailSkladnikEntity> newIngredients = dto.getIngredients().stream()
+                .map(item -> {
+                    SkladnikiEntity ingredient = skladnikiRepo.findById(item.getIngredientId())
+                            .orElseThrow(() -> new RuntimeException("Ingredient not found: " + item.getIngredientId()));
+
+                    KoktailSkladnikEntity ci = new KoktailSkladnikEntity();
+                    ci.setCocktail(cocktail);
+                    ci.setIngredient(ingredient);
+                    ci.setAmount(item.getAmount());
+                    ci.setUnit(item.getUnit());
+                    return ci;
+                })
+                .toList();
+
+
+        cocktail.getIngredients().addAll(newIngredients);
+
+        return kocktailsRepo.save(cocktail);
     }
+
+
+
 
     public List<KoktailEntity> getAll() {
         return kocktailsRepo.findAll();
