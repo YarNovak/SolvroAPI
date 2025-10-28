@@ -31,6 +31,8 @@ Projekt wspiera filtrowanie, sortowanie oraz paginację wyników.
 | `POST` | `/koktajls` | Dodaj nowy koktajl |
 | `PUT` | `/koktajls/{id}` | Zaktualizuj koktajl |
 | `DELETE` | `/koktajls/{id}` | Usuń koktajl |
+| `PUT` | `/koktajls/{k_id}/skladniki/{s_id}` | zmienić ilość składnika w koktajlu |
+| `DELETE` | `/koktajls/{k_id}/skladniki/{s_id}` | Usuń składnik w koktajlu |
 
 ---
 
