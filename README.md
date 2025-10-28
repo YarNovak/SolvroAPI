@@ -65,3 +65,7 @@ Wszystkie błędy są obsługiwane globalnie przez `GlobalExceptionHandler`, zwr
    spring.datasource.password=twojehaslo
    spring.jpa.hibernate.ddl-auto=update
    spring.jpa.show-sql=true
+
+
+   <img width="960" height="918" alt="image" src="https://github.com/user-attachments/assets/b2658625-3d08-4e3f-8d38-8c1f16866410" />
+
