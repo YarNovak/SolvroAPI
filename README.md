@@ -58,7 +58,7 @@ Wszystkie błędy są obsługiwane globalnie przez `GlobalExceptionHandler`, zwr
 2. Skonfiguruj `application.properties`:
 
    ```properties
-   spring.datasource.url=jdbc:postgresql://localhost:5432/solvro
+   spring.datasource.url=jdbc:postgresql://localhost:5432/SolvroBar
    spring.datasource.username=postgres
    spring.datasource.password=twojehaslo
    spring.jpa.hibernate.ddl-auto=update
