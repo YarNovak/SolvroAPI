@@ -8,7 +8,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Embeddable
-public class CocktailIngredientId implements Serializable {
+public class KoktajlsIngredientId implements Serializable {
     private Long cocktailId;
     private Long ingredientId;
 }

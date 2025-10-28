@@ -2,7 +2,7 @@ package org.example.solvroapi.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.solvroapi.Entity.SkladnikiEntity;
-import org.example.solvroapi.repositories.KoktailSkladnikRepo;
+import org.example.solvroapi.repositories.KoktajlSkladnikRepo;
 import org.example.solvroapi.repositories.SkladnikiRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -19,7 +19,7 @@ public class SkladnikiService {
     @Autowired
     private SkladnikiRepo repo;
     @Autowired
-    private KoktailSkladnikRepo koktails_skladniki;
+    private KoktajlSkladnikRepo koktails_skladniki;
 
     public SkladnikiEntity getSkladnik(Long id) {
         return repo.findById(id).orElse(null);
@@ -76,7 +76,6 @@ public class SkladnikiService {
                 .filter(s -> name.map(n -> s.getName().toLowerCase().contains(n.toLowerCase())).orElse(true))
                 .filter(s -> alcoholic.map(a -> s.isAlcoholic() == a).orElse(true))
                 .collect(Collectors.toList());
-
 
         int start = Math.min(page * size, filtered.size());
         int end = Math.min(start + size, filtered.size());

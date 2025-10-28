@@ -3,7 +3,7 @@ package org.example.solvroapi.Entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
-import org.example.solvroapi.Entity.Huita.CocktailIngredientId;
+import org.example.solvroapi.Entity.Huita.KoktajlsIngredientId;
 
 @Entity
 @Data
@@ -11,14 +11,14 @@ import org.example.solvroapi.Entity.Huita.CocktailIngredientId;
 @AllArgsConstructor
 @Builder
 @Table(name = "cocktail_ingredients")
-public class KoktailSkladnikEntity {
+public class KoktajlSkladnikEntity {
     @EmbeddedId
-    private CocktailIngredientId id = new CocktailIngredientId();
+    private KoktajlsIngredientId id = new KoktajlsIngredientId();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("cocktailId")
     @JsonIgnore
-    private KoktailEntity cocktail;
+    private KoktajlEntity cocktail;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("ingredientId")

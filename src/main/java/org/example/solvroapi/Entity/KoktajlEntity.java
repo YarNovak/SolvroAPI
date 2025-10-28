@@ -14,7 +14,7 @@ import java.util.*;
 @AllArgsConstructor
 @Builder
 @Table(name = "cocktails")
-public class KoktailEntity {
+public class KoktajlEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -27,5 +27,5 @@ public class KoktailEntity {
     private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "cocktail", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<KoktailSkladnikEntity> ingredients = new ArrayList<>();
+    private List<KoktajlSkladnikEntity> ingredients = new ArrayList<>();
 }
